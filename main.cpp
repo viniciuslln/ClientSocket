@@ -22,6 +22,10 @@
 #include <unistd.h>
 #include <netdb.h>
 
+#define buf_size 256
+#define handle_error(msg) \
+           do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
 using namespace std;
 
 /*
@@ -30,42 +34,49 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    int client;
-    int portNum = 1500; // NOTE that the port number is same for both client and server
-    bool isExit = false;
-    int bufsize = 1024;
-    char buffer[bufsize];
-    char* ip = "127.0.0.1";
- 
-    struct sockaddr_in server_addr;
- 
-    client = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if (client < 0)
-    {
-        cout << "\nError establishing socket..." << endl;
-        exit(1);
-    }
-    
-    cout << "\n=> Socket client has been created..." << endl;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(portNum);
-   
-    if (connect(client,(struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
-    {
-        cerr << "=> Connection to the server FAIL " << endl;
-        exit(1);
-    }
-            
-    cout << "=> Connection to the server port number: " << portNum << endl;
+    int Meusocket;
+	struct sockaddr_in vitima;
+	int Conector;
 
-    cout << "=> Awaiting confirmation from the server..." << endl; //line 40
-    recv(client, buffer, bufsize, 0);
-    cout << "=> Connection confirmed, you are good to go...";
- 
-    cout << "\n\n=> Enter # to end the connection\n" << endl;
-    
-    
+	Meusocket = socket(AF_INET,SOCK_STREAM,  0);//IPPROTO_TCP);
+	if(Meusocket < 0) /* Aqui faz-se uma simples checagem de erro */
+	{
+		perror("Socket");
+		exit(1);
+	}
+
+	vitima.sin_family = AF_INET;
+	vitima.sin_port = htons(6969);
+	vitima.sin_addr.s_addr =  inet_addr("127.0.0.1");
+
+	Conector = connect(Meusocket,(struct sockaddr * )&vitima, sizeof(vitima));
+	if(Conector < 0) /* Mais uma checagem de erro */
+	{
+            handle_error("connect");
+	}
+        
+        char buffer[buf_size];
+        int ind = 0 ;
+        //for( ind = 0; ind < 10; ind++);
+        do
+        {
+            recv(Meusocket, buffer, buf_size, 0);
+            cout << buffer;
+            
+            
+            
+            strcpy(buffer, "=> Client response... no: ");        
+            sprintf(buffer,"%s%d",buffer, ind);
+            strcat(buffer, "\n");
+
+            write(Meusocket, buffer, buf_size);
+            
+            ind++;
+        }while(ind < 1);
+
+        
+        
+        
     return 0;
 }
 
