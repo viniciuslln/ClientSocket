@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=client
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/client
+CND_ARTIFACT_NAME_Debug=metalingclient
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/metalingclient
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=client.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/client.tar
+CND_PACKAGE_NAME_Debug=metalingclient.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/metalingclient.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
-CND_ARTIFACT_NAME_Release=client
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/client
+CND_ARTIFACT_NAME_Release=metalingclient
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/metalingclient
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=client.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/client.tar
+CND_PACKAGE_NAME_Release=metalingclient.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/metalingclient.tar
 #
 # include compiler specific variables
 #

@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         
         char buffer[buf_size];
         int ind = 0 ;
-        //for( ind = 0; ind < 10; ind++);
+
         do
         {
             recv(Meusocket, buffer, buf_size, 0);
@@ -72,7 +72,30 @@ int main(int argc, char** argv)
             write(Meusocket, buffer, buf_size);
             
             ind++;
-        }while(ind < 1);
+        }while(1);
+
+//        for(ind = 0; ; ind++)
+//        {
+//
+//            int n = recv(Meusocket, buffer, buf_size, MSG_WAITALL );
+//            
+//            if (n < 0)
+//               cout << "ERROR reading from socket\n";
+//
+//            
+//            cout << "Here is the message: \n" <<  buffer << endl;
+//
+//            strcpy(buffer, "=> Client response... no: ");        
+//            sprintf(buffer,"%s%d",buffer, ind);
+//            strcat(buffer, "\n");
+//            
+//            n = write(Meusocket, buffer, buf_size);
+//
+//           if (n < 0)
+//               cout << "ERROR writing to socket\n";            
+//            
+//            
+//        }
 
         
         
