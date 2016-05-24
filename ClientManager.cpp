@@ -15,6 +15,22 @@
 
 ClientManager::ClientManager()
 {
+    
+//    if(buffer_command[0] != '/')
+//        {
+//            std::cout<<"Not a valid command. Type \"/help\" to show commands"<<std::endl;
+//            continue;            
+//        }    
+//        
+//        
+//        
+//        if(strcmp("/exit", buffer_command))
+//            finalize = true;
+//        else
+//        {
+//            send(client->get_Client(), buffer_command, COMMANDS_BUFFER_SIZE,0);
+//            
+//        }
 }
 
 ClientManager::ClientManager(const ClientManager& orig)
