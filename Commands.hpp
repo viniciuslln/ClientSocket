@@ -21,13 +21,19 @@ extern "C" {
 #define COMMANDS_BUFFER_SIZE 256
 #define MESSAGE_BUFFER_SIZE 1024
 
-
     enum Commands {
         HELP,
         EXIT,
-        SYSTEM_HOUR
-
-
+        LOOGING_HOUR,
+        MY_IP,
+        SERVER_HOUR,
+        SERVER_MEMORY,
+        SERVER_HD,
+        SERVER_TIME,
+        SERVER_IP,
+        SERVER_PORT,
+        SERVER_PRO,
+        SERVER_OPEN_PORTS
     };
     
     

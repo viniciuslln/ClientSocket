@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <map>
 #include "Commands.hpp"
 
 #define handle_error(msg) \
@@ -28,76 +29,111 @@
 
 using namespace std;
 
+
+std::map<std::string, Commands> mapCommand = {
+        {"/help",          Commands::HELP},
+        {"/exit",          Commands::EXIT},
+        {"/loggin_hour",   Commands::LOOGING_HOUR},
+        {"/server_ip",     Commands::SERVER_IP},
+        {"/my_ip",         Commands::MY_IP},
+        {"/server_hour",   Commands::SERVER_HOUR},
+        {"/server_memory", Commands::SERVER_MEMORY},
+        {"/server_hd",     Commands::SERVER_HD},
+        {"/server_time",   Commands::SERVER_TIME},
+        {"/server_pro", Commands::SERVER_PRO},
+        {"/server_open_ports", Commands::SERVER_OPEN_PORTS}
+    };
+
 /*
  * 
  */
 int main(int argc, char** argv)
 {
-
     char* ip = "127.0.0.1";
     int port = 6969;
+    char bufferCommand[COMMANDS_BUFFER_SIZE];
+    char bufferMessage[MESSAGE_BUFFER_SIZE];
+    
+    //Recuperando ip de conexão dos args ------------------------------------
     if(argc > 1){
         ip = argv[1];
         port = atoi(argv[2]);
     }
 
-    int Meusocket;
-    struct sockaddr_in vitima;
-    int Conector;
+    int thisClient;
+    struct sockaddr_in socketAddres;
+    int server;
 
-    Meusocket = socket(AF_INET, SOCK_STREAM, 0); //IPPROTO_TCP);
-    if ( Meusocket < 0 ) /* Aqui faz-se uma simples checagem de erro */
+    socketAddres.sin_family = AF_INET;
+    socketAddres.sin_port = htons(port);
+    socketAddres.sin_addr.s_addr = inet_addr(ip);
+    
+    thisClient = socket(AF_INET, SOCK_STREAM, 0); //IPPROTO_TCP);
+    if ( thisClient < 0 ) 
     {
         perror("Socket");
         exit(1);
     }
 
-    vitima.sin_family = AF_INET;
-    vitima.sin_port = htons(port);
-    vitima.sin_addr.s_addr = inet_addr(ip);
-
     std::cout<< "Connecting to: " << ip << " port: " << port << std::endl;
 
-    Conector = connect(Meusocket, ( struct sockaddr * ) &vitima, sizeof (vitima));
-    if ( Conector < 0 ) /* Mais uma checagem de erro */
+    server = connect(thisClient, ( struct sockaddr * ) &socketAddres, sizeof (socketAddres));
+    if ( server < 0 ) 
     {
         handle_error("connect");
     }
     
     std::cout<< "Connected!" << std::endl;
 
-
-    char bufferCommand[COMMANDS_BUFFER_SIZE];
-    char bufferMessage[MESSAGE_BUFFER_SIZE];
-    int ind = 0;
-
     bool finaliza = false;
     std::string com;
     do
     {
+        //digitar comando
         cin>>com;
+        
         if ( com[0] != '/' )
         {
             std::cout << "Not a valid command: " << com << std::endl;
+            std::cout << "Type \"/help\" to show commands. " << std::endl;
+            continue;
+        } else if(mapCommand.find(com) == mapCommand.end())
+        {
+            std::cout << "Not a valid command: " << com << std::endl;
+            std::cout << "Type \"/help\" to show commands. " << std::endl;
             continue;
         } else if ( com.compare("/exit") == 0 )
         {
             std::cout << "Exit command" << std::endl;
             finaliza = true;
-        } else
+        } else if(com.compare("/help") == 0)
+        {
+            std::cout << "Available commands: " << std::endl;
+            std::cout << "/help,\tFor help." << std::endl;
+            std::cout << "/exit,\tTo exit."  << std::endl;
+            std::cout << "/loggin_hour,\tFor this client login hour." << std::endl;
+            std::cout << "/server_ip,\tFor server Ip.     " << std::endl;
+            std::cout << "/my_ip,\tFor this client Ip.        " << std::endl;
+            std::cout << "/server_hour,\tFor server actual hour." << std::endl;
+            std::cout << "/server_memory\tFor server available memory.  " << std::endl;
+            std::cout << "/server_hd,\tFor server disck partitions."  << std::endl;  
+            std::cout << "/server_pro,\tFor server process info."  << std::endl;  
+            std::cout << "/server_open_ports,\tFor server available ports."  << std::endl;  
+        }
+        else
         {
             strcpy(bufferCommand, com.c_str());
 
             std::cout << "sending: " << bufferCommand << std::endl;
 
-            if ( write(Meusocket, bufferCommand, COMMANDS_BUFFER_SIZE) < 0 )
+            if ( write(thisClient, bufferCommand, COMMANDS_BUFFER_SIZE) < 0 )
             {
                 perror("write");
             }
             bzero(bufferCommand, COMMANDS_BUFFER_SIZE);
 
 
-            if ( recv(Meusocket, bufferMessage, MESSAGE_BUFFER_SIZE, 0) < 0 )
+            if ( recv(thisClient, bufferMessage, MESSAGE_BUFFER_SIZE, 0) < 0 )
             {
                 perror("recv");
             }
@@ -105,36 +141,10 @@ int main(int argc, char** argv)
             bzero(bufferMessage, MESSAGE_BUFFER_SIZE);
 
         }
-
+        std::cout << std::endl;  
     } while ( !finaliza );
 
-    close(Meusocket);
-
-    //        for(ind = 0; ; ind++)
-    //        {
-    //
-    //            int n = recv(Meusocket, buffer, buf_size, MSG_WAITALL );
-    //            
-    //            if (n < 0)
-    //               cout << "ERROR reading from socket\n";
-    //
-    //            
-    //            cout << "Here is the message: \n" <<  buffer << endl;
-    //
-    //            strcpy(buffer, "=> Client response... no: ");        
-    //            sprintf(buffer,"%s%d",buffer, ind);
-    //            strcat(buffer, "\n");
-    //            
-    //            n = write(Meusocket, buffer, buf_size);
-    //
-    //           if (n < 0)
-    //               cout << "ERROR writing to socket\n";            
-    //            
-    //            
-    //        }
-
-
-
+    close(thisClient);
 
     return 0;
 }
