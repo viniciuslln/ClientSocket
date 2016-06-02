@@ -1,1 +1,1 @@
-g++ -std=c++11 *.hpp *.cpp -o cli 
+g++ -std=c++11 *.cpp -o cli 
